@@ -82,9 +82,6 @@ end
 
 # Android
 platform :android do
-  before_all do
-    setup_circle_ci
-  end
 
   # Building lanes
   desc "Build android app in development branch to Firebase"
