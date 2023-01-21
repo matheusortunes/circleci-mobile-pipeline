@@ -91,14 +91,12 @@ workflows:
              only: 
               - devel
               - hml
-              - main
       # - build_ios:
       #    filters:
       #      branches:
       #        only: 
       #         - devel
       #         - hml
-      #         - main
       # - upload_ios:
       #    filters:
       #      branches:
