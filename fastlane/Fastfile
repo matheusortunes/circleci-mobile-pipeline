@@ -1,0 +1,126 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+#update_fastlane
+
+# iOS
+default_platform(:ios)
+platform :ios do
+  before_all do
+    setup_circle_ci
+  end
+
+  # Building lanes
+  desc "Build iOS app in development branch to Firebase"
+  lane :devel_build_ios do
+    match(
+      type: "appstore",
+      readonly: "true"
+    )
+    gym(
+      export_method: "app-store"
+    )
+    # firebase_app_distribution(
+    #   app: "1:xxxxxxxxxx:ios:xxxxxxxxxxxxxxxx",
+    #   service_credentials_file: "./firebase-cli.json",
+    #   groups: ""
+    # )
+  end
+  desc "Build iOS app in hml branch to Firebase"
+  lane :hml_build_ios do
+    match(
+      type: "appstore",
+      readonly: "true"
+    )
+    gym(
+      export_method: "app-store"
+    )
+    # firebase_app_distribution(
+    #   app: "1:xxxxxxxxxx:ios:xxxxxxxxxxxxxxxx",
+    #   service_credentials_file: "./firebase-cli.json",
+    #   groups: ""
+    # )
+  end
+  desc "Build iOS app in main branch to Firebase"
+  lane :main_build_ios do
+    match(
+      type: "appstore",
+      readonly: "true"
+    )
+    gym(
+      export_method: "app-store"
+    )
+  end
+
+  # Upload to appstore lane
+  lane :main_upload_to_appstore do
+    match(
+      type: "appstore"
+    )
+    gym(
+      export_method: "app-store"
+    )
+    # app_store_connect_api_key(
+    #   key_id: "XXXXXXXXX",
+    #   issuer_id: "xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxx",
+    #   key_filepath: "./fastlane/AuthKey_xxxxxxxxx.p8"
+    # )
+    upload_to_app_store
+  end
+end
+
+
+# Android
+platform :android do
+  before_all do
+    setup_circle_ci
+  end
+
+  # Building lanes
+  desc "Build android app in development branch to Firebase"
+  lane :devel_build_android do
+    gradle(
+      task: 'assemble', # assemble builds apk for dev & hml
+      build_type: 'Release',
+      project_dir: './android'
+    )
+    # firebase_app_distribution(
+    #   app: "1:xxxxxxxxxx:ios:xxxxxxxxxxxxxxxx",
+    #   service_credentials_file: "./firebase-cli.json",
+    #   groups: ""
+    # )
+  end
+  desc "Build android app in hml branch to Firebase"
+  lane :hml_build_android do
+    gradle(
+      task: 'assemble',
+      build_type: 'Release',
+      project_dir: './android'
+    )
+    # firebase_app_distribution(
+    #   app: "1:xxxxxxxxxx:ios:xxxxxxxxxxxxxxxx",
+    #   service_credentials_file: "./firebase-cli.json",
+    #   groups: ""
+    # )
+  end
+
+  # Upload to playstore lane
+  lane :main_upload_to_playstore do
+    gradle(
+      task: 'bundle', # bundle builds aab for main
+      build_type: 'Release',
+      project_dir: './android'
+    )
+    upload_to_play_store skip_upload_apk:true
+  end
+end

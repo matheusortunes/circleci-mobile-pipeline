@@ -1,0 +1,109 @@
+version: 2.1
+jobs:
+  build_ios:
+    macos:
+      xcode: 14.2.0	
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "your-fingerprint" # CircleCI USER ssh key
+      - checkout
+      - run: npm install
+      - run:
+          name: Install Cocoapods
+          command: gem install cocoapods && cd ios && pod install && cd ..
+      - run:
+          name: Install fastlane
+          command: bundle install && bundle update fastlane
+      - run: bundle exec fastlane add_plugin firebase_app_distribution
+      - run:
+          name: iOS build
+          command: bundle exec fastlane ios ${CIRCLE_BRANCH}_build_ios     
+      - run:
+          name: Upload to Firebase
+          command: bundle exec fastlane ios upload_firebase_ios
+
+  upload_ios:
+    macos:
+      xcode: 14.2.0
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "your-fingerprint" # CircleCI USER ssh key
+      - checkout
+      - run: npm install
+      - run:
+          name: Install Cocoapods
+          command: gem install cocoapods && cd ios && pod install && cd ..
+      - run:
+          name: Install fastlane
+          command: bundle install && bundle update fastlane
+      - run:
+          name: iOS build and deploy to Appstore
+          command: bundle exec fastlane ios ${CIRCLE_BRANCH}_upload_to_appstore
+
+  build_android:
+    docker:
+      - image: cimg/android:2022.12.1-node
+    steps:
+      - checkout
+      - run:
+          name: Install fastlane
+          command: bundle install && bundle update fastlane
+      - run: bundle exec fastlane add_plugin firebase_app_distribution
+      - run:
+          command: npm install --save --legacy-peer-deps
+      - run:
+          name: chmod permissions
+          command: chmod +x ./android/gradlew
+      - run:
+          name: Android build # artifact build path: /android/app/build/outputs/apk/release/app-release.apk
+          command: bundle exec fastlane android ${CIRCLE_BRANCH}_build_android
+      # Firebase não está sendo utilizado por parte dos devs.     
+      # - run:
+      #     name: Upload to Firebase
+      #     command: bundle exec fastlane ios upload_firebase_ios
+
+  upload_android:
+    docker:
+      - image: cimg/android:2022.08.1-node
+    steps:
+      - checkout
+      - run:
+          name: Install fastlane
+          command: bundle install && bundle update fastlane
+      - run:
+          command: npm install --save --legacy-peer-deps
+      - run:
+          name: chmod permissions
+          command: chmod +x ./android/gradlew
+      - run:
+          name: Android build and deploy to Playstore # artifact build path: /android/app/build/outputs/bundle/release/app-release.aab
+          command: bundle exec fastlane android ${CIRCLE_BRANCH}_upload_to_playstore 
+
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - build_android:
+         filters:
+           branches:
+             only: 
+              - devel
+              - hml
+              - main
+      # - build_ios:
+      #    filters:
+      #      branches:
+      #        only: 
+      #         - devel
+      #         - hml
+      #         - main
+      # - upload_ios:
+      #    filters:
+      #      branches:
+      #        only: main
+      # - upload_android:
+      #    filters:
+      #      branches:
+      #        only: main
