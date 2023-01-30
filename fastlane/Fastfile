@@ -30,11 +30,11 @@ platform :ios do
     gym(
       export_method: "app-store"
     )
-    # firebase_app_distribution(
-    #   app: "1:xxxxxxxxxx:ios:xxxxxxxxxxxxxxxx",
-    #   service_credentials_file: "./firebase-cli.json",
-    #   groups: ""
-    # )
+    firebase_app_distribution(
+      app: "1:xxxxxxxxxx:ios:xxxxxxxxxxxxxxxx",
+      service_credentials_file: "./firebase-cli.json",
+      groups: ""
+    )
   end
   desc "Build iOS app in hml branch to Firebase"
   lane :hml_build_ios do
@@ -45,11 +45,11 @@ platform :ios do
     gym(
       export_method: "app-store"
     )
-    # firebase_app_distribution(
-    #   app: "1:xxxxxxxxxx:ios:xxxxxxxxxxxxxxxx",
-    #   service_credentials_file: "./firebase-cli.json",
-    #   groups: ""
-    # )
+    firebase_app_distribution(
+      app: "1:xxxxxxxxxx:ios:xxxxxxxxxxxxxxxx",
+      service_credentials_file: "./firebase-cli.json",
+      groups: ""
+    )
   end
   desc "Build iOS app in main branch to Firebase"
   lane :main_build_ios do
@@ -70,11 +70,11 @@ platform :ios do
     gym(
       export_method: "app-store"
     )
-    # app_store_connect_api_key(
-    #   key_id: "XXXXXXXXX",
-    #   issuer_id: "xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxx",
-    #   key_filepath: "./fastlane/AuthKey_xxxxxxxxx.p8"
-    # )
+    app_store_connect_api_key(
+      key_id: "XXXXXXXXX",
+      issuer_id: "xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxx",
+      key_filepath: "./fastlane/AuthKey_xxxxxxxxx.p8"
+    )
     upload_to_app_store
   end
 end
@@ -91,11 +91,11 @@ platform :android do
       build_type: 'Release',
       project_dir: './android'
     )
-    # firebase_app_distribution(
-    #   app: "1:xxxxxxxxxx:ios:xxxxxxxxxxxxxxxx",
-    #   service_credentials_file: "./firebase-cli.json",
-    #   groups: ""
-    # )
+    firebase_app_distribution(
+      app: "1:xxxxxxxxxx:ios:xxxxxxxxxxxxxxxx",
+      service_credentials_file: "./firebase-cli.json",
+      groups: ""
+    )
   end
   desc "Build android app in hml branch to Firebase"
   lane :hml_build_android do
@@ -104,11 +104,11 @@ platform :android do
       build_type: 'Release',
       project_dir: './android'
     )
-    # firebase_app_distribution(
-    #   app: "1:xxxxxxxxxx:ios:xxxxxxxxxxxxxxxx",
-    #   service_credentials_file: "./firebase-cli.json",
-    #   groups: ""
-    # )
+    firebase_app_distribution(
+      app: "1:xxxxxxxxxx:ios:xxxxxxxxxxxxxxxx",
+      service_credentials_file: "./firebase-cli.json",
+      groups: ""
+    )
   end
 
   # Upload to playstore lane

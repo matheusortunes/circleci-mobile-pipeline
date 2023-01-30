@@ -51,6 +51,7 @@ jobs:
           name: Install fastlane
           command: bundle install && bundle update fastlane
       - run: bundle exec fastlane add_plugin firebase_app_distribution
+      - run: bundle exec fastlane update_plugins
       - run:
           command: npm install
       - run:
@@ -59,10 +60,10 @@ jobs:
       - run:
           name: Android build # artifact build path: /android/app/build/outputs/apk/release/app-release.apk
           command: bundle exec fastlane android ${CIRCLE_BRANCH}_build_android
-      # Firebase não está sendo utilizado por parte dos devs.     
-      # - run:
-      #     name: Upload to Firebase
-      #     command: bundle exec fastlane ios upload_firebase_ios
+      Firebase não está sendo utilizado por parte dos devs.     
+      - run:
+          name: Upload to Firebase
+          command: bundle exec fastlane ios upload_firebase_ios
 
   upload_android:
     docker:
@@ -91,17 +92,17 @@ workflows:
              only: 
               - devel
               - hml
-      # - build_ios:
-      #    filters:
-      #      branches:
-      #        only: 
-      #         - devel
-      #         - hml
-      # - upload_ios:
-      #    filters:
-      #      branches:
-      #        only: main
-      # - upload_android:
-      #    filters:
-      #      branches:
-      #        only: main
+      - build_ios:
+         filters:
+           branches:
+             only: 
+              - devel
+              - hml
+      - upload_ios:
+         filters:
+           branches:
+             only: main
+      - upload_android:
+         filters:
+           branches:
+             only: main
